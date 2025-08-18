@@ -9,24 +9,17 @@ package org.jd.ide.eclipse.editors;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Map;
-
-import org.jd.ide.eclipse.JavaDecompilerPlugin;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IBuffer;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.core.BufferManager;
-import org.eclipse.jdt.internal.core.ClassFile;
-import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor;
 import org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput;
@@ -34,8 +27,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.ide.FileStoreEditorInput;
-import org.eclipse.ui.ide.ResourceUtil;
+import org.jd.ide.eclipse.JavaDecompilerPlugin;
 
 
 /**
@@ -45,7 +37,6 @@ import org.eclipse.ui.ide.ResourceUtil;
  * @version 0.1.4
  * @see     org.eclipse.jdt.internal.ui.javaeditor.ClassFileEditor
  */
-@SuppressWarnings("restriction")
 public class JDClassFileEditor extends ClassFileEditor implements IPropertyChangeListener {	
 	public JDClassFileEditor() {
 		JavaDecompilerPlugin

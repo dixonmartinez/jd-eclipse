@@ -1,6 +1,42 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+}
 
-jar {
-    from 'feature.xml'
-    archiveName baseName + '_' + version + '.' + extension
+repositories {
+    // jcenter está discontinuado, mejor usar Maven Central
+    mavenCentral()
+}
+
+configurations {
+    provided
+    implementation.extendsFrom provided
+}
+
+dependencies {
+    // Declara aquí las dependencias reales de tu feature, si aplica.
+    // Por lo general, un feature PDE no tiene código Java, así que puede quedarse vacío
+    // o incluir 'provided' si empaquetas alguna lib adicional.
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// Tarea jar actualizada
+tasks.jar {
+    from('feature.xml')
+
+    archiveBaseName.set(project.name)
+    archiveVersion.set(version.toString())
+    archiveExtension.set('jar')
+
+    // Si el feature necesita empaquetar otras carpetas o archivos:
+    // from('icons') { include '**/*' }
+    // from('about.ini')
+
+    // Si usas librerías runtime opcionales:
+    // into('lib') {
+    //     from configurations.runtimeClasspath - configurations.provided
+    // }
 }

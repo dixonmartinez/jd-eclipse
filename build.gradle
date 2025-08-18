@@ -1,8 +1,9 @@
-apply plugin: 'distribution'
+plugins {
+    id 'distribution'
+}
 
-// Common configuration //
 allprojects {
-	version='2.0.0'
+    version = '2.0.0'
 }
 
 subprojects.each { subproject ->
@@ -10,29 +11,20 @@ subprojects.each { subproject ->
 }
 
 distributions {
-	distZip {
-		// Create JAR files before final ZIP file
-		dependsOn subprojects.tasks['jar']		
-		// For each file, remove root directory  
-		eachFile { file ->
-        	String path = file.relativePath
-        	file.setPath(path.substring(path.indexOf('/')+1, path.length()))
-    	}
-	}
+    main {
+        contents {
+            into('features') {
+                from { fileTree('org.jd.ide.eclipse.feature/build/libs') { include '*.jar' } }
+            }
+            into('plugins') {
+                from { fileTree('org.jd.ide.eclipse.plugin/build/libs') { include '*.jar' } }
+            }
+            from('org.jd.ide.eclipse.site/site.xml', 'LICENSE', 'NOTICE', 'README.md')
+        }
+    }
+}
 
-	main {
-		contents {
-			into('features') {
-				from { 
-					fileTree 'org.jd.ide.eclipse.feature/build/libs'
-				}
-			}
-			into('plugins') {
-				from { 
-					fileTree 'org.jd.ide.eclipse.plugin/build/libs'
-				}
-			}
-			from 'org.jd.ide.eclipse.site/site.xml', 'LICENSE', 'NOTICE', 'README.md'
-		}
-	}
+// 👉 Esto va aquí, al final del build.gradle raíz
+tasks.named('distZip') {
+    dependsOn subprojects.collect { it.tasks.matching { t -> t.name == 'jar' } }
 }
