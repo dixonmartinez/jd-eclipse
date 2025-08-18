@@ -7,14 +7,7 @@
 
 package org.jd.ide.eclipse;
 
-import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IFileEditorMapping;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.EditorDescriptor;
-import org.eclipse.ui.internal.registry.EditorRegistry;
-import org.eclipse.ui.internal.registry.FileEditorMapping;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -24,7 +17,6 @@ import org.osgi.framework.BundleContext;
  * @project Java Decompiler Eclipse Plugin
  * @version 0.1.4
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public class JavaDecompilerPlugin extends AbstractUIPlugin {
 	// The plug-in IDs
 	public  static final String PLUGIN_ID = "jd.ide.eclipse";
@@ -62,7 +54,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin {
 
 		// Setup ".class" file associations
 		Display.getDefault().syncExec(new SetupClassFileAssociationRunnable());
-		System.out.println("JavaDecompilerPlugin Started");
 	}
 
 	/*
@@ -70,10 +61,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		plugin.savePluginPreferences();
 		plugin = null;
 		super.stop(context);
-		System.out.println("JavaDecompilerPlugin Stoped");
 	}
 
 	/**

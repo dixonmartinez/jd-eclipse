@@ -9,7 +9,6 @@ package org.jd.ide.eclipse.startup;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
-import org.jd.ide.eclipse.JavaDecompilerPlugin;
 import org.jd.ide.eclipse.SetupClassFileAssociationRunnable;
 
 /**
