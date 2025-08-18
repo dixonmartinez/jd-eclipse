@@ -155,8 +155,8 @@ public class JDClassFileEditor extends ClassFileEditor implements IPropertyChang
 	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
-		if (getSourceViewer() != null) {
+		/*if (getSourceViewer() != null) {
 			setInput(getEditorInput());
-		}
+		}*/
 	}
 }

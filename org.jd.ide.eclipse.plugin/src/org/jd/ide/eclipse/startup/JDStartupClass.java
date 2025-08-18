@@ -7,7 +7,10 @@
 
 package org.jd.ide.eclipse.startup;
 
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.jd.ide.eclipse.JavaDecompilerPlugin;
+import org.jd.ide.eclipse.SetupClassFileAssociationRunnable;
 
 /**
  * JDStartupClass
@@ -16,5 +19,10 @@ import org.eclipse.ui.IStartup;
  * @version 0.1.4
  */
 public class JDStartupClass implements IStartup {
-	public void earlyStartup() {}
+	public void earlyStartup() {
+		Display.getDefault().asyncExec(() -> {
+            new SetupClassFileAssociationRunnable().run();
+            System.out.println("JDStartup: Editor associations configured.");
+        });
+	}
 }
