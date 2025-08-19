@@ -9,8 +9,6 @@ package org.jd.ide.eclipse;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.jd.ide.eclipse.preferences.EditorRegistryUtil;
-import org.jd.ide.eclipse.preferences.JDDecompilerConfiguration;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -61,17 +59,6 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin {
 		} catch (Exception e) {
 		    System.out.println("Failed to configure class file associations" + e);
 		}
-		
-		getPreferenceStore().addPropertyChangeListener(event -> {
-		    String property = event.getProperty();
-		    Object newValue = event.getNewValue();
-
-		    switch (property) {
-		        case PREF_USE_AS_DEFAULT_EDITOR:
-		            EditorRegistryUtil.updateDefaultEditor(Boolean.TRUE.equals(newValue));
-		            break;
-		    }
-		});
 	}
 
 	/*

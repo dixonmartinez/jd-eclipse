@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.jd.ide.eclipse.plugin;singleton:=true
 Bundle-Version: 2.0.0
 Bundle-Activator: org.jd.ide.eclipse.JavaDecompilerPlugin
 Bundle-Vendor: Dixon Martinez
+Bundle-Localization: org.jd.ide.eclipse.util.messages
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.ui.editors;bundle-version="3.20.0",
