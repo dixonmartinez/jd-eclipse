@@ -2,54 +2,48 @@ package org.jd.ide.eclipse;
 
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IFileEditorMapping;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.registry.EditorDescriptor;
-import org.eclipse.ui.internal.registry.EditorRegistry;
-import org.eclipse.ui.internal.registry.FileEditorMapping;
+import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.PlatformUI;
 
 public class SetupClassFileAssociationRunnable implements Runnable {
 	
-	public void run() {
-		EditorRegistry registry = (EditorRegistry)WorkbenchPlugin.getDefault().getEditorRegistry();
-		
-		IFileEditorMapping[] mappings = registry.getFileEditorMappings();
-		IFileEditorMapping c = null;
-		IFileEditorMapping cws = null;
-		
-		// Search Class file editor mappings
-		for (IFileEditorMapping mapping : mappings) {
-			if (mapping.getExtension().equals("class")) {
-				// ... Helios 3.6, Indigo 3.7, Juno 4.2, Kepler 4.3, ...
-				c = mapping;
-			} else if (mapping.getExtension().equals("class without source")) {
-				// Juno 4.2, Kepler 4.3, ...
-				cws = mapping;
-			}
-		}
+	private static final String CLASS_EXTENSION = "class";
+    private static final String JD_EDITOR_ID = JavaDecompilerPlugin.EDITOR_ID;
 
-		if ((c != null) && (cws != null)) {
-			// Search JD editor descriptor on "class" extension
-			for (IEditorDescriptor descriptor : c.getEditors()) {		
-				if (descriptor.getId().equals(JavaDecompilerPlugin.EDITOR_ID)) {
-					// Remove JD editor on "class" extension
-					((FileEditorMapping)c).removeEditor((EditorDescriptor)descriptor);
+    private IEditorDescriptor findEditorById(IEditorDescriptor[] editors, String id) {
+        for (IEditorDescriptor editor : editors) {
+            if (editor.getId().equals(id)) {
+                return editor;
+            }
+        }
+        return null;
+    }
+	
+	@Override
+    public void run() {
+        IEditorRegistry registry = PlatformUI.getWorkbench().getEditorRegistry();
+        if (registry == null) {
+            System.err.println("EditorRegistry not available.");
+            return;
+        }
 
-					// Set JD as default editor on "class without source" extension
-					registry.setDefaultEditor("." + cws.getExtension(), descriptor.getId());
-					break;
-				}
-			}
-			
-			// Restore the default editor for "class" extension
-			IEditorDescriptor defaultClassFileEditor = registry.findEditor(JavaUI.ID_CF_EDITOR);
-			
-			if (defaultClassFileEditor != null) {
-				registry.setDefaultEditor("." + c.getExtension(), JavaUI.ID_CF_EDITOR);
-			}				
-			
-			registry.setFileEditorMappings((FileEditorMapping[]) mappings);
-			registry.saveAssociations();			
-		}
-	}
+        IEditorDescriptor[] editors = registry.getEditors("." + CLASS_EXTENSION);
+        IEditorDescriptor jdEditor = findEditorById(editors, JD_EDITOR_ID);
+
+        if (jdEditor != null) {
+            System.out.println("JD Editor found: " + jdEditor.getLabel());
+
+            // Set JD editor as default for .class files
+            registry.setDefaultEditor("." + CLASS_EXTENSION, JD_EDITOR_ID);
+
+            // Optionally restore JavaUI default if needed
+            IEditorDescriptor defaultEditor = registry.findEditor(JavaUI.ID_CF_EDITOR);
+            if (defaultEditor != null && !defaultEditor.getId().equals(JD_EDITOR_ID)) {
+                System.out.println("Restoring default editor: " + defaultEditor.getLabel());
+                registry.setDefaultEditor("." + CLASS_EXTENSION, JavaUI.ID_CF_EDITOR);
+            }
+        } else {
+            System.out.println("JD Editor not found among registered editors.");
+        }
+    }
 }

@@ -155,8 +155,23 @@ public class JDClassFileEditor extends ClassFileEditor implements IPropertyChang
 	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	public void propertyChange(PropertyChangeEvent event) {
-		/*if (getSourceViewer() != null) {
-			setInput(getEditorInput());
-		}*/
+		String property = event.getProperty();
+
+	    if (isRelevantPreference(property) && getEditorInput() != null) {
+	        try {
+	            setInput(getEditorInput()); // Esto vuelve a ejecutar doSetInput
+	        } catch (Exception e) {
+	            JavaDecompilerPlugin.getDefault().getLog().log(new Status(
+	                Status.ERROR, JavaDecompilerPlugin.PLUGIN_ID,
+	                0, "Error al refrescar el editor JD", e));
+	        }
+	    }
+	}
+	
+	private boolean isRelevantPreference(String property) {
+	    return property.equals(JavaDecompilerPlugin.PREF_ESCAPE_UNICODE_CHARACTERS)
+	        || property.equals(JavaDecompilerPlugin.PREF_REALIGN_LINE_NUMBERS)
+	        || property.equals(JavaDecompilerPlugin.PREF_SHOW_LINE_NUMBERS)
+	        || property.equals(JavaDecompilerPlugin.PREF_SHOW_METADATA);
 	}
 }

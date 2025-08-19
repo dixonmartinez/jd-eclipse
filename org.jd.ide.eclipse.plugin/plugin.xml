@@ -11,7 +11,7 @@
             category="org.eclipse.jdt.ui.preferences.JavaBasePreferencePage"
             class="org.jd.ide.eclipse.preferences.PreferencePage"
             id="org.jd.ide.eclipse.preferences.PreferencePage"
-            name="Decompiler">
+            name="Java Decompiler">
       </page>
    </extension>
    <extension

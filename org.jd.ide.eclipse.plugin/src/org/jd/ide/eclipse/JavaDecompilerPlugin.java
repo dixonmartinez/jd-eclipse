@@ -9,6 +9,8 @@ package org.jd.ide.eclipse;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.jd.ide.eclipse.preferences.EditorRegistryUtil;
+import org.jd.ide.eclipse.preferences.JDDecompilerConfiguration;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -31,7 +33,8 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin {
 	public static final String PREF_REALIGN_LINE_NUMBERS        = PLUGIN_ID + ".prefs.RealignLineNumbers";
 	public static final String PREF_SHOW_LINE_NUMBERS           = PLUGIN_ID + ".prefs.ShowLineNumbers";
 	public static final String PREF_SHOW_METADATA               = PLUGIN_ID + ".prefs.ShowMetadata";
-
+	public static final String PREF_USE_AS_DEFAULT_EDITOR 		= PLUGIN_ID + ".prefs.UseJDAsDefaultEditor";
+	
 	// URLs
 	public static final String URL_JDECLIPSE = "https://github.com/java-decompiler/jd-eclipse";
 	
@@ -51,9 +54,24 @@ public class JavaDecompilerPlugin extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-
+		
 		// Setup ".class" file associations
-		Display.getDefault().syncExec(new SetupClassFileAssociationRunnable());
+		try {
+		    Display.getDefault().asyncExec(new SetupClassFileAssociationRunnable());
+		} catch (Exception e) {
+		    System.out.println("Failed to configure class file associations" + e);
+		}
+		
+		getPreferenceStore().addPropertyChangeListener(event -> {
+		    String property = event.getProperty();
+		    Object newValue = event.getNewValue();
+
+		    switch (property) {
+		        case PREF_USE_AS_DEFAULT_EDITOR:
+		            EditorRegistryUtil.updateDefaultEditor(Boolean.TRUE.equals(newValue));
+		            break;
+		    }
+		});
 	}
 
 	/*
